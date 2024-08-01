@@ -152,6 +152,7 @@ install_api() {
     cd /home/tecnomafer/api
     docker compose up -d
     npm install
+    npx prisma migrate deploy
     pm2 start /home/tecnomafer/api/dist/main.js --name api
     pm2 save
     sudo systemctl enable pm2-$USER
