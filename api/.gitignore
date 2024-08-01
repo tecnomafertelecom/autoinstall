@@ -1,6 +1,5 @@
 # compiled output
 /core.9353
-/dist
 /node_modules
 /data
 db/*.db

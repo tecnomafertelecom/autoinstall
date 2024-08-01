@@ -149,6 +149,8 @@ install_api() {
 
     # Configurar o PM2 para iniciar no boot
     sudo pm2 startup systemd -u $USER --hp $HOME
+    cd home/tecnomafer/api
+    npm install
     pm2 start /home/tecnomafer/api/dist/main.js --name api
     pm2 save
     sudo systemctl enable pm2-$USER

@@ -1,0 +1,75 @@
+import { PrismaService } from 'src/prisma/prisma.service';
+import { CallsDTO } from '../dto/create-calls.dto';
+export declare class CallsRepository {
+    private readonly prisma;
+    constructor(prisma: PrismaService);
+    paginate(page?: number, size?: number, sort?: string, order?: 'asc' | 'desc', search?: string): Promise<{
+        results: {
+            id: string;
+            agentId: string;
+            linkedId: string;
+            source: string;
+            status: string;
+            destination: string;
+            extensionAnswered: string;
+            recording: string;
+            startDate: Date;
+            answeredDate: Date;
+            endDate: Date;
+            realDirection: string;
+            direction: string;
+            queue: string;
+            hangupNum: string;
+            hangupCause: string;
+            feedback: boolean;
+            tratativa: string;
+        }[];
+        totalItems: number;
+        totalPages: number;
+        currentPage: number;
+        pageSize: number;
+    }>;
+    findAll(): Promise<{
+        id: string;
+        agentId: string;
+        linkedId: string;
+        source: string;
+        status: string;
+        destination: string;
+        extensionAnswered: string;
+        recording: string;
+        startDate: Date;
+        answeredDate: Date;
+        endDate: Date;
+        realDirection: string;
+        direction: string;
+        queue: string;
+        hangupNum: string;
+        hangupCause: string;
+        feedback: boolean;
+        tratativa: string;
+    }[]>;
+    findOne(id: string): Promise<CallsDTO | null>;
+    create(createCallsDto: CallsDTO): Promise<CallsDTO>;
+    update(id: string, data: CallsDTO): Promise<{
+        id: string;
+        agentId: string;
+        linkedId: string;
+        source: string;
+        status: string;
+        destination: string;
+        extensionAnswered: string;
+        recording: string;
+        startDate: Date;
+        answeredDate: Date;
+        endDate: Date;
+        realDirection: string;
+        direction: string;
+        queue: string;
+        hangupNum: string;
+        hangupCause: string;
+        feedback: boolean;
+        tratativa: string;
+    }>;
+    remove(id: string): Promise<CallsDTO | null>;
+}
