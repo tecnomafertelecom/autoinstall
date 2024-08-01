@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Agent {
+  id           String    @id @default(uuid())
+  name         String
+  email        String
+  extension    Int       @unique
+  photo        String?
+  login        String    @unique
+  password     String?
+  token        String?
+  status       String?
+  refreshToken String?   @map("refresh_token")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+  Pauses       Pauses[]
+  Onlines      Online[]
+  Calls        Calls[]
+}
+
+model Pauses {
+  id       String   @id @default(uuid())
+  reason   String
+  start    DateTime
+  end      DateTime
+  duration Float
+  agent    Agent    @relation(fields: [agentId], references: [id])
+  agentId  String   @map("agent_id")
+}
+
+model Online {
+  id       String   @id @default(uuid())
+  reason   String
+  start    DateTime
+  end      DateTime
+  duration Float
+  agent    Agent    @relation(fields: [agentId], references: [id])
+  agentId  String   @map("agent_id")
+}
+
+model Calls {
+  id                String    @id @default(uuid())
+  agent             Agent     @relation(fields: [agentId], references: [id])
+  agentId           String
+  linkedId          String
+  source            String?
+  status            String?
+  destination       String?
+  extensionAnswered String?   @map("extension_answered")
+  recording         String?
+  startDate         DateTime? @map("start_date")
+  answeredDate      DateTime? @map("answered_date")
+  endDate           DateTime? @map("end_date")
+  realDirection     String?   @map("real_direction")
+  direction         String?
+  queue             String?
+  hangupNum         String?   @map("hangup_num")
+  hangupCause       String?   @map("hangup_cause")
+  feedback          Boolean   @default(false)
+  tratativa         String?
+}
+
+model Breaks {
+  id     String @id @default(uuid())
+  reason String
+  time   Int    @default(0)
+}
+
+model DashboardVelocity {
+  id    String @id @default(uuid())
+  title String
+  value Int
+}
+
+model CallDurationConfig {
+  id           String @id @default(uuid())
+  limit        Int
+  limitForType String
+}
