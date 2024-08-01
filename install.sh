@@ -78,18 +78,104 @@ install_centos_rocky() {
     docker-compose --version
 }
 
+cloneRepositorio() {
+    
+    # Definir a URL do repositório
+    REPO_URL="https://github.com/tecnomafertelecom/autoinstall.git"
+
+    # Definir o diretório de destino para clonar o repositório
+    CLONE_DIR="/home/tecnomafer"
+
+    # Definir o diretório de origem dos arquivos a serem copiados
+    SOURCE_DIR="$CLONE_DIR/frontend/dist"
+    SOURCE_DIR_BACKEND="$CLONE_DIR/backend"
+    # Definir o diretório de destino dos arquivos copiados
+    DEST_DIR="/var/www/html/reports_2"
+    DEST_DIR_BACKEND="/var/www/html"
+    # Clonar o repositório
+    git clone "$REPO_URL" "$CLONE_DIR"
+
+    # Verificar se o clone foi bem-sucedido
+    if [ $? -eq 0 ]; then
+        echo "Repositório clonado com sucesso em $CLONE_DIR"
+    else
+        echo "Falha ao clonar o repositório"
+        exit 1
+    fi
+
+    # Verificar se o diretório SOURCE_DIR existe
+    if [ -d "$SOURCE_DIR" ]; then
+        # Criar o diretório de destino, se não existir
+        mkdir -p "$DEST_DIR"
+
+        # Copiar os arquivos da pasta dist para o diretório de destino
+        cp -r "$SOURCE_DIR/"* "$DEST_DIR"
+        cp -r "$SOURCE_DIR_BACKEND/"* "$DEST_DIR_BACKEND"
+        # Verificar se a cópia foi bem-sucedida
+        if [ $? -eq 0 ]; then
+            echo "Arquivos copiados com sucesso para $DEST_DIR"
+        else
+            echo "Falha ao copiar os arquivos"
+            exit 1
+        fi
+    else
+        echo "O diretório $SOURCE_DIR não existe"
+        exit 1
+    fi
+}
+install_api() {
+    # Verificar e instalar dependências necessárias
+    sudo yum install -y curl git
+
+    # Baixar e instalar o NVM
+    if ! command -v nvm &> /dev/null
+    then
+        echo "NVM não está instalado. Instalando o NVM..."
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+        export NVM_DIR="$HOME/.nvm"
+        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+        [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+    else
+        echo "NVM já está instalado."
+    fi
+
+    # Instalar a versão 16 do Node.js e definir como padrão
+    nvm install 16
+    nvm use 16
+    nvm alias default 16
+
+    # Instalar o PM2 globalmente
+    npm install -g pm2
+
+    # Configurar o PM2 para iniciar no boot
+    sudo pm2 startup systemd -u $USER --hp $HOME
+    pm2 start /home/tecnomafer/api/dist/main.js --name api
+    pm2 save
+    sudo systemctl enable pm2-$USER
+
+    echo "Instalação do PM2 concluída com sucesso."
+}
+
 # Detectar o sistema operacional
 os_name=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2 | tr -d '"')
 
+
+
 case $os_name in
     ubuntu)
+        cloneRepositorio
         install_ubuntu
+        install_api
         ;;
     centos)
+        cloneRepositorio
         install_centos_rocky
+        install_api
         ;;
     rocky)
+        cloneRepositorio
         install_centos_rocky
+        install_api
         ;;
     *)
         echo "Sistema operacional não suportado. Este script suporta apenas Ubuntu, CentOS 7 e Rocky Linux 8."
