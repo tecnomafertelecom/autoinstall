@@ -1,5 +1,44 @@
 #!/bin/bash
 
+# Função para solicitar IP e porta e substituir em arquivos
+configurar_ip_porta() {
+    # Solicitar o IP e a porta ao usuário
+    read -p "Digite o IP do SERVIDOR WEB: " IP
+    #read -p "Digite a PORTA do SERVIDOR WEB: " PORTA
+
+    # Verificar se as variáveis foram preenchidas
+    #if [ -z "$IP" ] || [ -z "$PORTA" ]; then
+    if [ -z "$IP" ]; then
+        echo "IP não fornecidos. Abortando a instalação."
+        exit 1
+    fi
+
+    # Substituir o IP nos arquivos .js
+    substituir_ip_js "$IP"
+
+    echo "Configuração de IP e porta concluída."
+}
+
+substituir_ip_js() {
+    local novo_ip=$1
+    local ip_antigo="177.45.80.177"
+    local diretorio="/var/www/html/reports_2/js/"
+
+    # Verificar se o diretório existe
+    if [ ! -d "$diretorio" ]; then
+        echo "Diretório $diretorio não encontrado."
+        exit 1
+    fi
+
+    # Encontrar e substituir o IP antigo pelo novo nos arquivos .js
+    for arquivo in "$diretorio"*.js; do
+        if [ -f "$arquivo" ]; then
+            sed -i "s/$ip_antigo/$novo_ip/g" "$arquivo"
+            echo "Substituído IP em $arquivo"
+        fi
+    done
+}
+
 # Função para instalar Docker e Docker Compose no Ubuntu
 install_ubuntu() {
     # Desinstalar versões anteriores do Docker
@@ -163,7 +202,7 @@ install_api() {
 # Detectar o sistema operacional
 os_name=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2 | tr -d '"')
 
-
+configurar_ip_porta
 
 case $os_name in
     ubuntu)
