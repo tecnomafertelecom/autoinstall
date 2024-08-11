@@ -202,23 +202,25 @@ install_api() {
 # Detectar o sistema operacional
 os_name=$(cat /etc/os-release | grep ^ID= | cut -d'=' -f2 | tr -d '"')
 
-configurar_ip_porta
 
 case $os_name in
     ubuntu)
         cloneRepositorio
         install_ubuntu
         install_api
+        configurar_ip_porta
         ;;
     centos)
         cloneRepositorio
         install_centos_rocky
         install_api
+        configurar_ip_porta
         ;;
     rocky)
         cloneRepositorio
         install_centos_rocky
         install_api
+        configurar_ip_porta
         ;;
     *)
         echo "Sistema operacional não suportado. Este script suporta apenas Ubuntu, CentOS 7 e Rocky Linux 8."
