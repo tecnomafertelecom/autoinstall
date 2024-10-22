@@ -1,43 +1,43 @@
 #!/bin/bash
 
 # Função para solicitar IP e porta e substituir em arquivos
-configurar_ip_porta() {
-    # Solicitar o IP e a porta ao usuário
-    read -p "Digite o IP do SERVIDOR WEB: " IP
-    #read -p "Digite a PORTA do SERVIDOR WEB: " PORTA
+# configurar_ip_porta() {
+#     # Solicitar o IP e a porta ao usuário
+#     read -p "Digite o IP do SERVIDOR WEB: " IP
+#     #read -p "Digite a PORTA do SERVIDOR WEB: " PORTA
 
-    # Verificar se as variáveis foram preenchidas
-    #if [ -z "$IP" ] || [ -z "$PORTA" ]; then
-    if [ -z "$IP" ]; then
-        echo "IP não fornecidos. Abortando a instalação."
-        exit 1
-    fi
+#     # Verificar se as variáveis foram preenchidas
+#     #if [ -z "$IP" ] || [ -z "$PORTA" ]; then
+#     if [ -z "$IP" ]; then
+#         echo "IP não fornecidos. Abortando a instalação."
+#         exit 1
+#     fi
 
-    # Substituir o IP nos arquivos .js
-    substituir_ip_js "$IP"
+#     # Substituir o IP nos arquivos .js
+#     substituir_ip_js "$IP"
 
-    echo "Configuração de IP e porta concluída."
-}
+#     echo "Configuração de IP e porta concluída."
+# }
 
-substituir_ip_js() {
-    local novo_ip=$1
-    local ip_antigo="177.45.80.177"
-    local diretorio="/var/www/html/reports_2/js/"
+# substituir_ip_js() {
+#     local novo_ip=$1
+#     local ip_antigo="177.45.80.177"
+#     local diretorio="/var/www/html/reports_2/js/"
 
-    # Verificar se o diretório existe
-    if [ ! -d "$diretorio" ]; then
-        echo "Diretório $diretorio não encontrado."
-        exit 1
-    fi
+#     # Verificar se o diretório existe
+#     if [ ! -d "$diretorio" ]; then
+#         echo "Diretório $diretorio não encontrado."
+#         exit 1
+#     fi
 
-    # Encontrar e substituir o IP antigo pelo novo nos arquivos .js
-    for arquivo in "$diretorio"*.js; do
-        if [ -f "$arquivo" ]; then
-            sed -i "s/$ip_antigo/$novo_ip/g" "$arquivo"
-            echo "Substituído IP em $arquivo"
-        fi
-    done
-}
+#     # Encontrar e substituir o IP antigo pelo novo nos arquivos .js
+#     for arquivo in "$diretorio"*.js; do
+#         if [ -f "$arquivo" ]; then
+#             sed -i "s/$ip_antigo/$novo_ip/g" "$arquivo"
+#             echo "Substituído IP em $arquivo"
+#         fi
+#     done
+# }
 
 # Função para instalar Docker e Docker Compose no Ubuntu
 install_ubuntu() {
@@ -208,19 +208,19 @@ case $os_name in
         cloneRepositorio
         install_ubuntu
         install_api
-        configurar_ip_porta
+        # configurar_ip_porta
         ;;
     centos)
         cloneRepositorio
         install_centos_rocky
         install_api
-        configurar_ip_porta
+        # configurar_ip_porta
         ;;
     rocky)
         cloneRepositorio
         install_centos_rocky
         install_api
-        configurar_ip_porta
+        # configurar_ip_porta
         ;;
     *)
         echo "Sistema operacional não suportado. Este script suporta apenas Ubuntu, CentOS 7 e Rocky Linux 8."
