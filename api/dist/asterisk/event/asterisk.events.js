@@ -69,9 +69,11 @@ let AsteriskEventsHandler = class AsteriskEventsHandler {
     async handleQueueMemberAdded(evt) {
         const agentInterface = evt?.Interface.split('/')[1];
         const currentTime = Date.now();
+        console.log("AgentInterface", agentInterface);
         let foundAgent = null;
         for (const [key, value] of exports.agentInfo.entries()) {
             const extensionString = String(value.extension);
+            console.log("ExtensionString", extensionString);
             if (extensionString.includes(agentInterface)) {
                 foundAgent = key;
                 break;
@@ -133,11 +135,12 @@ let AsteriskEventsHandler = class AsteriskEventsHandler {
         const callInfoFromMap = callsMap.get(evt.Linkedid);
         if (callInfoFromMap) {
             const callerIDName = callInfoFromMap.callerIDName;
+            const connectedLineNum = callInfoFromMap.destCallerIDNum;
             let foundAgent = null;
             exports.agentInfo.forEach((value, key) => {
                 const extensionString = String(value.extension);
                 if (extensionString.includes(callerIDName) ||
-                    evt.CallerIDNum === value.extension) {
+                    extensionString.includes(connectedLineNum)) {
                     foundAgent = key;
                 }
             });
@@ -178,7 +181,7 @@ let AsteriskEventsHandler = class AsteriskEventsHandler {
         const callInfoFromMap = callsMap.get(evt.Linkedid);
         if (callInfoFromMap) {
             const callerIDName = callInfoFromMap.callerIDName;
-            const connectedLineNum = callInfoFromMap.connectedLineNum;
+            const connectedLineNum = callInfoFromMap.destCallerIDNum;
             let foundAgent = null;
             exports.agentInfo.forEach((value, key) => {
                 const extensionString = String(value.extension);
@@ -224,8 +227,9 @@ let AsteriskEventsHandler = class AsteriskEventsHandler {
         callsMap.set(evt.Linkedid, callInfo);
         const callInfoFromMap = callsMap.get(evt.Linkedid);
         if (callInfoFromMap) {
+            console.log("CallMAP:", callInfoFromMap);
             const callerIDName = callInfoFromMap.callerIDName;
-            const connectedLineNum = callInfoFromMap.connectedLineNum;
+            const connectedLineNum = callInfoFromMap.destCallerIDNum;
             let foundAgent = null;
             exports.agentInfo.forEach((value, key) => {
                 const extensionString = String(value.extension);
@@ -282,10 +286,12 @@ let AsteriskEventsHandler = class AsteriskEventsHandler {
         const callInfoFromMap = callsMap.get(linkedid);
         if (callInfoFromMap) {
             const callerIDName = callInfoFromMap.callerIDName;
+            const connectedLineNum = callInfoFromMap.destCallerIDNum;
             let foundAgent = null;
             exports.agentInfo.forEach((value, key) => {
                 const extensionString = String(value.extension);
-                if (extensionString.includes(callerIDName)) {
+                if (extensionString.includes(callerIDName) ||
+                    extensionString.includes(connectedLineNum)) {
                     foundAgent = key;
                 }
             });

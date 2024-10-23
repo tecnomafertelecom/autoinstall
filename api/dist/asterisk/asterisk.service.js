@@ -57,9 +57,18 @@ let AsteriskService = class AsteriskService {
             this.amiClient.on('DialEnd', (evt) => this.asteriskEvents.handleQueueMemberDialEnd(evt));
             this.amiClient.on('QueueCallerAbandon', (evt) => this.asteriskEvents.handleQueueCallerAbandon(evt));
             this.amiClient.on('QueueParams', (evt) => this.asteriskEvents.handleQueueParams(evt));
-            this.amiClient.on('QueueMemberStatus', (evt) => this.asteriskEvents.handleQueueMemberStatus(evt));
-            this.amiClient.on('QueueMemberPause', (evt) => this.asteriskEvents.handleQueueMemberPause(evt));
-            this.amiClient.on('QueueMemberRemoved', (evt) => this.asteriskEvents.handleQueueMemberRemoved(evt));
+            this.amiClient.on('QueueMemberStatus', (evt) => {
+                console.log("Queue member", evt);
+                this.asteriskEvents.handleQueueMemberStatus(evt);
+            });
+            this.amiClient.on('QueueMemberPause', (evt) => {
+                console.log("Queue member Pause", evt);
+                this.asteriskEvents.handleQueueMemberPause(evt);
+            });
+            this.amiClient.on('QueueMemberRemoved', (evt) => {
+                console.log("Queue member Removed", evt);
+                this.asteriskEvents.handleQueueMemberRemoved(evt);
+            });
             this.amiClient.on('Agents', (evt) => console.log(evt));
         })
             .catch((error) => console.log(error));
