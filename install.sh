@@ -128,9 +128,13 @@ cloneRepositorio() {
     # Definir o diretório de origem dos arquivos a serem copiados
     SOURCE_DIR="$CLONE_DIR/frontend/dist"
     SOURCE_DIR_BACKEND="$CLONE_DIR/backend"
+    SOURCE_DIR_CALLCENTER_JS="$CLONE_DIR/callcenter/javascript.js"
+    SOURCE_DIR_CALLCENTER_TPL="$CLONE_DIR/callcenter/javascript.js"
     # Definir o diretório de destino dos arquivos copiados
     DEST_DIR="/var/www/html/reports_2"
     DEST_DIR_BACKEND="/var/www/html"
+    DEST_DIR_CALLCENTER_JS="/var/www/html/modules/agent_console/themes/default/js/"
+    DEST_DIR_CALLCENTER_TPL="/var/www/html/modules/agent_console/themes/default/js/"
     # Clonar o repositório
     git clone "$REPO_URL" "$CLONE_DIR"
 
@@ -150,6 +154,8 @@ cloneRepositorio() {
         # Copiar os arquivos da pasta dist para o diretório de destino
         cp -r "$SOURCE_DIR/"* "$DEST_DIR"
         cp -r "$SOURCE_DIR_BACKEND/"* "$DEST_DIR_BACKEND"
+        cp -r "$SOURCE_DIR_CALLCENTER_JS" "$DEST_DIR_CALLCENTER_JS"
+        cp -r "$SOURCE_DIR_CALLCENTER_TPL" "$DEST_DIR_CALLCENTER_TPL"
         # Verificar se a cópia foi bem-sucedida
         if [ $? -eq 0 ]; then
             echo "Arquivos copiados com sucesso para $DEST_DIR"
